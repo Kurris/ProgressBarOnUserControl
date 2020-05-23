@@ -1,6 +1,6 @@
-﻿namespace ProgressForm
+﻿namespace Ligy
 {
-    partial class Form1
+    partial class Test
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -13,7 +13,7 @@
         /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if( disposing && ( components != null ) )
             {
                 components.Dispose();
             }
@@ -28,13 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.btnBegin = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // btnBegin
+            // 
+            this.btnBegin.Location = new System.Drawing.Point(713, 415);
+            this.btnBegin.Name = "btnBegin";
+            this.btnBegin.Size = new System.Drawing.Size(75, 23);
+            this.btnBegin.TabIndex = 0;
+            this.btnBegin.Text = "Begin";
+            this.btnBegin.UseVisualStyleBackColor = true;
+            // 
+            // Test
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.Controls.Add(this.btnBegin);
+            this.Name = "Test";
+            this.Text = "Test";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Button btnBegin;
     }
 }
 

@@ -1,6 +1,6 @@
-﻿namespace Unitl
+﻿namespace Ligy
 {
-    partial class CusProgressForm
+    partial class ProgressbarEx
     {
         /// <summary> 
         /// 必需的设计器变量。
@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CusProgressForm));
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressbarEx));
+            this.MainProgressBar = new System.Windows.Forms.ProgressBar();
             this.lblTips = new System.Windows.Forms.Label();
             this.PicStop = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.PicStop)).BeginInit();
             this.SuspendLayout();
             // 
-            // progressBar1
+            // MainProgressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 21);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(626, 12);
-            this.progressBar1.TabIndex = 0;
+            this.MainProgressBar.Location = new System.Drawing.Point(12, 21);
+            this.MainProgressBar.Name = "MainProgressBar";
+            this.MainProgressBar.Size = new System.Drawing.Size(626, 12);
+            this.MainProgressBar.TabIndex = 0;
             // 
             // lblTips
             // 
@@ -48,7 +48,7 @@
             this.lblTips.Name = "lblTips";
             this.lblTips.Size = new System.Drawing.Size(295, 18);
             this.lblTips.TabIndex = 1;
-            this.lblTips.Text = "正在加载数据,请稍等";
+            this.lblTips.Text = "Elapsed Time";
             this.lblTips.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PicStop
@@ -62,16 +62,16 @@
             this.PicStop.TabIndex = 2;
             this.PicStop.TabStop = false;
             // 
-            // CusProgressForm
+            // ProgressbarEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 41);
+            this.ClientSize = new System.Drawing.Size(664, 45);
             this.Controls.Add(this.PicStop);
             this.Controls.Add(this.lblTips);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.MainProgressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "CusProgressForm";
+            this.Name = "ProgressbarEx";
             ((System.ComponentModel.ISupportInitialize)(this.PicStop)).EndInit();
             this.ResumeLayout(false);
 
@@ -79,7 +79,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar MainProgressBar;
         private System.Windows.Forms.Label lblTips;
         private System.Windows.Forms.PictureBox PicStop;
     }
