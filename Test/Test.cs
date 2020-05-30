@@ -35,12 +35,12 @@ namespace Ligy
         private void BtnBegin_Click(object sender, EventArgs e)
         {
             btnBegin.Enabled = false;
-
+     
             try
             {
                 if (workHelper != null || (workHelper != null && workHelper.IsBusy))
                 {
-                    workHelper.Stop();
+                    workHelper.Dispose();
                     workHelper = null;
                 }
                 if (workHelper == null)
@@ -55,7 +55,7 @@ namespace Ligy
                     try
                     { 
                         //ToDo  like Thread.Sleep(20000);
-                        Thread.Sleep(2000);
+                        Thread.Sleep(10000);
                         args.Msg = "...this is bussiness code result";
                         throw new Exception("");
                     }
@@ -79,8 +79,8 @@ namespace Ligy
                     }
 
                     //get your para result
-                    ParaArg x = eve.Result as ParaArg;
-
+                    ParaArg x = eve.Result;
+                 
                     if (x.Ex != null)
                     {
                         //get your bussiness exception;
@@ -126,6 +126,7 @@ namespace Ligy
     /// </summary>
     public class ParaArg
     {
+        public DataTable Data { get; set; }
         public string Msg { get; set; }
         public Exception Ex { get; set; }
     }
