@@ -14,8 +14,10 @@ namespace Ligy
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BackgroundWorkerEx<T> : IWorkerReportProgress, IDisposable
+    public class BackgroundWorkerEx<T> : IDisposable
     {
+        #region Event
+
         public delegate void DoWorkEventHandler(DoWorkEventArgs<T> Argument);
         /// <summary>
         /// StartAsync
@@ -28,42 +30,34 @@ namespace Ligy
         /// </summary>
         public event StopEventHandler WorkStoped;
 
-        public delegate void RunWorkCompletedEventHandler(RunWorkerCompletedEventArgs Argument);
+        public delegate void RunWorkCompletedEventHandler(RunWorkerCompletedEventArgs<T> Argument);
         /// <summary>
         /// FinishAsync
         /// </summary>
         public event RunWorkCompletedEventHandler RunWorkCompleted;
 
-        public delegate void ProgressChangedEventHandler(MProgressChangedEventArgs Argument);
-        /// <summary>
-        /// ReportProgress
-        /// </summary>
-        public event ProgressChangedEventHandler ProgressChanged;
+
+        #endregion
 
         /// <summary>
         /// .Net  BackgroundWorker
         /// </summary>
-        private BackgroundWorker Worker = null;
+        private BackgroundWorker _mWorker = null;
 
         /// <summary>
         /// Whole Para
         /// </summary>
-        private T WorkArg { get; set; }
+        private T _mWorkArg = default(T);
 
         /// <summary>
         /// Timer
         /// </summary>
-        private Timer timer;
+        private Timer _mTimer = null;
 
         /// <summary>
         /// WorkingThread
         /// </summary>
-        private Thread WorkerThread;
-
-        /// <summary>
-        /// 进度条提示 默认： 正在加载数据，请稍后[{0}]{1}
-        /// </summary>
-        public string ProgressTip { get; set; } = "Elapsed Time[{0}]{1}";
+        private Thread _mWorkerThread = null;
 
         /// <summary>
         /// Async time sec
@@ -76,9 +70,10 @@ namespace Ligy
         private int _miShowProgressCount = 0;
 
         /// <summary>
-        /// Stop flag
-        /// </summary>
-        private bool _mbIsStop = false;
+        /// ProgressbarEx
+        /// </summary
+        private ProgressbarEx _mfrmProgressForm = null;
+
 
 
         /// <summary>
@@ -88,18 +83,20 @@ namespace Ligy
         {
             get
             {
-                if (Worker != null)
+                if (_mWorker != null)
                 {
-                    return Worker.IsBusy;
+                    return _mWorker.IsBusy;
                 }
                 return false;
             }
         }
 
         /// <summary>
-        /// ProgressbarEx
-        /// </summary
-        private ProgressbarEx _mfrmProgressForm = null;
+        /// 进度条提示 默认： 正在加载数据，请稍后[{0}]{1}
+        /// </summary>
+        public string ProgressTip { get; set; } = "Elapsed Time[{0}]{1}";
+
+
 
         /// <summary>
         /// Start AsyncWorl
@@ -117,32 +114,30 @@ namespace Ligy
             _miShowProgressCount = 0;
 
             //init
-            if (Worker != null && Worker.IsBusy)
+            if (_mWorker != null && _mWorker.IsBusy)
             {
-                Worker.CancelAsync();
-                Worker = null;
+                _mWorker.CancelAsync();
+                _mWorker = null;
             }
 
-            Worker = new BackgroundWorker();
+            _mWorker = new BackgroundWorker();
 
             //create progressbar
             _mfrmProgressForm = new ProgressbarEx();
 
             //add event
-            Worker.DoWork += Worker_DoWork;
-            Worker.RunWorkerCompleted += Worker_RunWorkCompleted;
-            Worker.ProgressChanged += Worker_ProgressChanged;
+            _mWorker.DoWork += Worker_DoWork;
+            _mWorker.RunWorkerCompleted += Worker_RunWorkCompleted;
 
-            Worker.WorkerReportsProgress = true;
-            Worker.WorkerSupportsCancellation = true;
+            _mWorker.WorkerReportsProgress = true;
+            _mWorker.WorkerSupportsCancellation = true;
 
             //Set Whole Para
-            WorkArg = Para;
+            _mWorkArg = Para;
 
+            _mWorker.RunWorkerAsync(Para);
             //Start timer
             StartTimer();
-
-            Worker.RunWorkerAsync(Para);
 
             _mfrmProgressForm.StartPosition = FormStartPosition.CenterParent;
             _mfrmProgressForm.ShowDialog();
@@ -163,32 +158,40 @@ namespace Ligy
 
             DoWorkEventArgs<T> Argument = new DoWorkEventArgs<T>(e.Argument);
 
-            WorkerThread = new Thread(o =>
+            try
+            {
+                if (_mWorkerThread != null && _mWorkerThread.IsAlive)
+                {
+                    _mWorkerThread.Abort();
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(50);
+            }
+
+            _mWorkerThread = new Thread(a =>
             {
                 try
                 {
-                    DoWork?.Invoke(Argument);
-                }
-                catch (ThreadAbortException)
-                {
-
+                    DoWork?.Invoke(a as DoWorkEventArgs<T>);
                 }
                 catch (Exception)
                 {
 
                 }
-
             });
 
-            WorkerThread.IsBackground = true;
-            WorkerThread.Start(Argument);
+            _mWorkerThread.IsBackground = true;
+            _mWorkerThread.Start(Argument);
 
             //Maybe cpu do not start thread
             Thread.Sleep(20);
 
-            while (WorkerThread.IsAlive)
+            //Wait.....
+            while (_mWorkerThread.IsAlive)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(50);
             }
 
             e.Result = Argument.Result;
@@ -210,10 +213,25 @@ namespace Ligy
                     _mfrmProgressForm = null;
                 }
 
-                //In timer, When stop progress will make thread throw AbortException
-                if (WorkerThread != null && WorkerThread.ThreadState == ThreadState.Aborted)
+                if (_mWorker != null)
                 {
-                    WorkStoped?.Invoke(new DoWorkEventArgs<T>(WorkArg));
+                    _mWorker.DoWork -= Worker_DoWork;
+                    _mWorker.RunWorkerCompleted -= Worker_RunWorkCompleted;
+
+                    try
+                    {
+                        if (_mWorkerThread != null && _mWorkerThread.IsAlive)
+                        {
+                            _mWorkerThread.Abort();
+                        }
+                    }
+                    catch (Exception) { }
+                }
+
+                //In timer, When stop progress will make thread throw AbortException
+                if (_mWorkerThread != null && _mWorkerThread.ThreadState == ThreadState.Aborted)
+                {
+                    WorkStoped?.Invoke(new DoWorkEventArgs<T>(_mWorkArg));
                 }
                 else
                 {
@@ -224,34 +242,7 @@ namespace Ligy
             {
                 throw ex;
             }
-            finally
-            {
-                StopWorkerAndThread();
-                StopTimer();
-            }
         }
-
-        /// <summary>
-        /// Report Progress
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            try
-            {
-                if (_mfrmProgressForm != null)
-                {
-                    _mfrmProgressForm.ReportProgress(e.ProgressPercentage, e.UserState);
-
-                    ProgressChanged?.Invoke(new MProgressChangedEventArgs(e.ProgressPercentage, e.UserState));
-                }
-            }
-            catch (Exception) { }
-
-        }
-
-
 
 
         /// <summary>
@@ -265,37 +256,34 @@ namespace Ligy
                 ProgressTip += "...Elapsed Time{0}{1}";
             }
 
-            if (timer != null) return;
+            if (_mTimer != null) return;
 
             //On one sec 
-            timer = new Timer(1000);
-            timer.Elapsed += (s, e) =>
+            _mTimer = new Timer(1000);
+            _mTimer.Elapsed += (s, e) =>
             {
                 //progress and it's stop flag (picture stop)||  this stop flag
-                if ((_mfrmProgressForm != null && _mfrmProgressForm.IsStop) || _mbIsStop)
+                if (_mfrmProgressForm != null && _mfrmProgressForm.IsStop)
                 {
-                    if (Worker != null)
+                    if (_mWorker != null)
                     {
                         try
                         {
-                            if (WorkerThread != null && WorkerThread.IsAlive)
+                            if (_mWorkerThread != null && _mWorkerThread.IsAlive)
                             {
-                                StopTimer();
-                                WorkerThread.Abort();
+                                if (_mTimer != null && _mTimer.Enabled)
+                                {
+                                    _mTimer.Stop();
+                                    _mTimer = null;
+                                }
+                                _mWorkerThread.Abort();
                             }
                         }
-                        catch (ThreadAbortException)
-                        {
-
-                        }
-                        catch (Exception)
-                        {
-
-                        }
+                        catch (Exception) { }
                     }
                 }
 
-                if (_mfrmProgressForm!=null)
+                if (_mfrmProgressForm != null)
                 {
                     //Callback 
                     _mfrmProgressForm.Invoke(new Action<DateTime>(elapsedtime =>
@@ -304,6 +292,10 @@ namespace Ligy
 
                         //worked time
                         _miWorkerStartDateSecond++;
+                        if (_mfrmProgressForm != null)
+                        {
+                            _mfrmProgressForm.SetProgressValue(_miWorkerStartDateSecond);
+                        }
 
                         //.....count
                         _miShowProgressCount++;
@@ -321,81 +313,20 @@ namespace Ligy
 
                         if (_mfrmProgressForm != null)
                         {
-                            _mfrmProgressForm.ReportProgress(_miWorkerStartDateSecond, null);
                             _mfrmProgressForm.TipMessage = ProgressText;
-                            _mfrmProgressForm.SetTip();
                         }
                     }), e.SignalTime);
                 }
             };
 
-            if (!timer.Enabled)
+            if (!_mTimer.Enabled)
             {
-                timer.Start();
-            }
-        }
-
-        /// <summary>
-        /// Stop Async
-        /// </summary>
-        public void Stop()
-        {
-            _mbIsStop = true;
-        }
-
-        /// <summary>
-        /// Stop Timer
-        /// </summary>
-        private void StopTimer()
-        {
-            if (timer != null && timer.Enabled)
-            {
-                timer.Stop();
-            }
-
-            //refresh contanier
-            if (_mfrmProgressForm != null)
-            {
-                if (!_mfrmProgressForm.IsDisposed && _mfrmProgressForm.Created)
-                {
-                    _mfrmProgressForm.Close();
-                    _mfrmProgressForm.Dispose();
-                    _mfrmProgressForm = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Stop the all objects
-        /// </summary>
-        private void StopWorkerAndThread()
-        {
-            if (Worker != null)
-            {
-                Worker.DoWork -= Worker_DoWork;
-                Worker.RunWorkerCompleted -= Worker_RunWorkCompleted;
-                Worker.ProgressChanged -= Worker_ProgressChanged;
-
-                try
-                {
-                    if (WorkerThread != null && WorkerThread.IsAlive)
-                    {
-                        WorkerThread.Abort();
-                    }
-                }
-                catch (Exception) { }
+                _mTimer.Start();
             }
         }
 
 
-
-        public void ReportProgress(int precentProgress, object userState)
-        {
-            if (Worker != null)
-            {
-                Worker.ReportProgress(precentProgress, userState);
-            }
-        }
+        #region Dispose
 
         /// <summary>
         /// Dispose
@@ -407,16 +338,24 @@ namespace Ligy
                 DoWork = null;
                 RunWorkCompleted = null;
                 WorkStoped = null;
-                ProgressChanged = null;
 
-                WorkerThread = null;
-                Worker.Dispose();
-                Worker = null;
-                timer = null;
+                _mWorkerThread = null;
+                _mWorker.Dispose();
+                _mWorker = null;
+                _mTimer = null;
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+
+            }
         }
+
+        #endregion
     }
+
+
+
+    #region Parameters Class
 
     public class DoWorkEventArgs<T> : DoWorkEventArgs
     {
@@ -430,7 +369,6 @@ namespace Ligy
         }
     }
 
-
     public class RunWorkerCompletedEventArgs<T> : RunWorkerCompletedEventArgs
     {
         public new T Result { get; set; }
@@ -441,16 +379,5 @@ namespace Ligy
         }
     }
 
-    public class MProgressChangedEventArgs : ProgressChangedEventArgs
-    {
-        public MProgressChangedEventArgs(int progressPercentage, object userState) : base(progressPercentage, userState)
-        {
-
-        }
-
-    }
-    public interface IWorkerReportProgress
-    {
-        void ReportProgress(int percentProgress, object userState);
-    }
+    #endregion
 }

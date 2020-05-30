@@ -38,24 +38,32 @@ namespace Ligy
         /// <summary>
         /// TipMessage
         /// </summary>
-        public string TipMessage { get; set; }
+        public string TipMessage
+        {
+            get
+            {
+                return lblTips.Text;
+            }
+            set
+            {
+
+                lblTips.Text = value;
+            }
+        }
 
         /// <summary>
-        /// SetTip
+        /// Set ProgressBar value ,which makes ProgressBar smooth
         /// </summary>
-        public void SetTip()
+        /// <param name="value"></param>
+        public void SetProgressValue(int value)
         {
-            lblTips.Text = TipMessage;
+
+            if (MainProgressBar.Value == 100) MainProgressBar.Value = 0;
+
+            MainProgressBar.Value = value;
         }
 
-        internal void ReportProgress(int progressPercentage , object userState)
-        {
-            if( MainProgressBar.Value==MainProgressBar.Maximum )
-            {
-                MainProgressBar.Value = 0;
-            }
-            MainProgressBar.Value = progressPercentage ;
-        }
+
 
         #region NoWrap drag
 
