@@ -27,7 +27,7 @@ BackgroundWorkerEx<ParaArg> workHelper = null;
 ``` C#
   if (workHelper != null || (workHelper != null && workHelper.IsBusy))
                 {
-                    workHelper.Stop();
+                    workHelper.Dispose();
                     workHelper = null;
                 }
                 if (workHelper == null)
@@ -65,7 +65,7 @@ BackgroundWorkerEx<ParaArg> workHelper = null;
                     }
 
                     //get your para result
-                    ParaArg x = eve.Result as ParaArg;
+                    ParaArg x = eve.Result;
 
                     if (x.Ex != null)
                     {
