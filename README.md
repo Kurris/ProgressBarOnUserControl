@@ -85,7 +85,7 @@ BackgroundWorkerEx<ParaArg> workHelper = null;
                 { 
                     //if stoped ! it means no error;
                     //just get what you want; 
-                    ParaArg x = eve.Result as ParaArg;
+                    ParaArg x = eve.Result;
 
                     btnBegin.Enabled = true;
                 };
