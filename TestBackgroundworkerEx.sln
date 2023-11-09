@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{F02C2C63-5BAC-412E-A14E-4BF12144B795}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundworkerEx", "BackgroundworkerEx\BackgroundworkerEx.csproj", "{6B10D808-E5D4-448D-B6FC-8655EDFC0108}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KurisuBackgroundWorker", "KurisuBackgroundWorker\KurisuBackgroundWorker.csproj", "{6B10D808-E5D4-448D-B6FC-8655EDFC0108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

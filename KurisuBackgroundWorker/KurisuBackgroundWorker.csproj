@@ -7,11 +7,12 @@
     <ProjectGuid>{6B10D808-E5D4-448D-B6FC-8655EDFC0108}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BackGroundWork</RootNamespace>
-    <AssemblyName>BackGroundWork</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>KurisuBackgroundWorker</RootNamespace>
+    <AssemblyName>KurisuBackgroundWorker</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,12 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundWorkerEx.cs" />
-    <Compile Include="ProgressbarEx.cs">
+    <Compile Include="KurisuBackgroundWorker.cs" />
+    <Compile Include="ProgressbarNew.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressbarEx.Designer.cs">
-      <DependentUpon>ProgressbarEx.cs</DependentUpon>
+    <Compile Include="ProgressbarNew.Designer.cs">
+      <DependentUpon>ProgressbarNew.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -57,8 +60,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ProgressbarEx.resx">
-      <DependentUpon>ProgressbarEx.cs</DependentUpon>
+    <EmbeddedResource Include="ProgressbarNew.resx">
+      <DependentUpon>ProgressbarNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

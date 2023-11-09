@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Kurisu;
 
 namespace Ligy
 {
@@ -16,6 +11,8 @@ namespace Ligy
         public Test()
         {
             InitializeComponent();
+
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -25,7 +22,7 @@ namespace Ligy
             btnBegin.Click += BtnBegin_Click;
         }
 
-        BackgroundWorkerEx<ParaArg> workHelper = null;
+        KurisuBackgroundWorker<ParaArg> workHelper = null;
 
         /// <summary>
         /// Begin
@@ -35,7 +32,7 @@ namespace Ligy
         private void BtnBegin_Click(object sender, EventArgs e)
         {
             btnBegin.Enabled = false;
-     
+
             try
             {
                 if (workHelper != null || (workHelper != null && workHelper.IsBusy))
@@ -45,15 +42,15 @@ namespace Ligy
                 }
                 if (workHelper == null)
                 {
-                    workHelper = new BackgroundWorkerEx<ParaArg>();
+                    workHelper = new KurisuBackgroundWorker<ParaArg>();
                 }
 
-                workHelper.DoWork += (eve) =>
+                workHelper.Executing += (eve) =>
                 {
                     ParaArg args = eve.Argument;
 
                     try
-                    { 
+                    {
                         //ToDo  like Thread.Sleep(20000);
                         Thread.Sleep(10000);
                         args.Msg = "...this is bussiness code result";
@@ -69,7 +66,7 @@ namespace Ligy
                     }
 
                 };
-                workHelper.RunWorkCompleted += (eve) =>
+                workHelper.Completed += (eve) =>
                 {
                     if (eve.Error != null)
                     {
@@ -80,7 +77,7 @@ namespace Ligy
 
                     //get your para result
                     ParaArg x = eve.Result;
-                 
+
                     if (x.Ex != null)
                     {
                         //get your bussiness exception;
@@ -95,8 +92,8 @@ namespace Ligy
                     btnBegin.Enabled = true;
                 };
 
-                workHelper.WorkStoped += (eve) =>
-                { 
+                workHelper.Stoped += (eve) =>
+                {
                     //if stoped ! it means no error;
                     //just get what you want; 
                     ParaArg x = eve.Result as ParaArg;
@@ -110,7 +107,7 @@ namespace Ligy
                     Msg = "Msg"
                 };
 
-                workHelper.AsyncStart(arg);
+                workHelper.Start(arg);
 
             }
             catch (Exception ex)

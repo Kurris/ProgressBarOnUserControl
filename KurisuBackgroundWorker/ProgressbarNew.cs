@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Ligy
+namespace Kurisu
 {
-    public partial class ProgressbarEx : Form
+    public partial class ProgressbarNew : Form
     {
-        public ProgressbarEx()
+        public ProgressbarNew()
         {
             InitializeComponent();
 
@@ -90,8 +84,7 @@ namespace Ligy
                 this.Location = new Point(this.Location.X + x, this.Location.Y + y);
             }
         }
+
         #endregion
-
-
     }
 }

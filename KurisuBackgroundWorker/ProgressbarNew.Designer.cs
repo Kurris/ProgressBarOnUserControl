@@ -1,6 +1,6 @@
-﻿namespace Ligy
+﻿namespace Kurisu
 {
-    partial class ProgressbarEx
+    partial class ProgressbarNew
     {
         /// <summary> 
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressbarEx));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressbarNew));
             this.MainProgressBar = new System.Windows.Forms.ProgressBar();
             this.lblTips = new System.Windows.Forms.Label();
             this.PicStop = new System.Windows.Forms.PictureBox();
@@ -37,25 +37,25 @@
             // 
             // MainProgressBar
             // 
-            this.MainProgressBar.Location = new System.Drawing.Point(12, 21);
+            this.MainProgressBar.Location = new System.Drawing.Point(13, 35);
             this.MainProgressBar.Name = "MainProgressBar";
             this.MainProgressBar.Size = new System.Drawing.Size(626, 12);
             this.MainProgressBar.TabIndex = 0;
             // 
             // lblTips
             // 
-            this.lblTips.Location = new System.Drawing.Point(11, 0);
+            this.lblTips.Location = new System.Drawing.Point(11, 9);
             this.lblTips.Name = "lblTips";
             this.lblTips.Size = new System.Drawing.Size(295, 18);
             this.lblTips.TabIndex = 1;
-            this.lblTips.Text = "Elapsed Time";
+            this.lblTips.Text = "等待时间";
             this.lblTips.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PicStop
             // 
             this.PicStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.PicStop.Image = ((System.Drawing.Image)(resources.GetObject("PicStop.Image")));
-            this.PicStop.Location = new System.Drawing.Point(644, 0);
+            this.PicStop.Location = new System.Drawing.Point(641, 9);
             this.PicStop.Name = "PicStop";
             this.PicStop.Size = new System.Drawing.Size(21, 18);
             this.PicStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -66,7 +66,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 45);
+            this.ClientSize = new System.Drawing.Size(664, 69);
             this.Controls.Add(this.PicStop);
             this.Controls.Add(this.lblTips);
             this.Controls.Add(this.MainProgressBar);

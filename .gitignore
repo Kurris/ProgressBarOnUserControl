@@ -2,9 +2,6 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/.vs/TestBackgroundworkerEx/v16
-/BackgroundworkerEx/bin/Debug
-/BackgroundworkerEx/obj/Debug
-/Test/bin/Debug
-/Test/obj/Debug
-/Test/.vs/TestBackgroundworkerEx/v16
+.vs
+bin
+obj
